@@ -7,7 +7,7 @@ Sistema completo de simulación, validación y análisis predictivo de parqueade
 - `data_generator.py`: Genera archivos `.csv` simulando parqueaderos, usuarios, espacios, entradas y salidas.
 - `depure_app.py`: Aplicación visual con Streamlit para verificar calidad e integridad de datos generados.
 - `migrate_data.py`: Inserta los datos `.csv` en una base de datos MySQL.
-- `agent_autopark/app.py`: Agente inteligente con predicción de ocupación y alertas en tiempo real (GUI con Tkinter).
+- `parking_agent/app.py`: Agente inteligente con predicción de ocupación y alertas en tiempo real (GUI con Tkinter).
 
 ## ⚙️ Requisitos
 
