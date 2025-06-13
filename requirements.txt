@@ -1,0 +1,8 @@
+pandas
+faker
+streamlit
+pymysql
+mysql-connector-python
+scikit-learn
+matplotlib
+tk

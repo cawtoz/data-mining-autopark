@@ -25,7 +25,7 @@ print("Restricciones de claves foráneas reactivadas.")
 
 # Función para cargar CSV e insertar en tabla
 def load_csv_to_table(csv_filename, table_name):
-    df = pd.read_csv(rf"C:\Users\cawtoz\Documents\Dev\Me\Proyecto AutoPark\data-mining\generated-data\{csv_filename}", sep=';')
+    df = pd.read_csv(rf"C:\Users\cawtoz\Documents\Dev\Me\Proyecto AutoPark\data-mining-autopark\generated-data\{csv_filename}", sep=';')
 
     print(f"Insertando datos en {table_name} desde {csv_filename}...")
 
