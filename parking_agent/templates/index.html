@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}Parqueaderos Disponibles{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1>Parqueaderos Disponibles</h1>
+        <p>Selecciona un parqueadero para ver su estado y predicciones en tiempo real.</p>
+    </div>
+
+    {% if parkings %}
+        <div class="parking-list-grid">
+            {% for parking in parkings %}
+            <a href="/parking/{{ parking.id }}" class="parking-card">
+                <div class="parking-header">
+                    <h3>{{ parking.name }}</h3>
+                    <span class="parking-id">ID: {{ parking.id }}</span>
+                </div>
+                <p class="parking-address">{{ parking.address }}</p>
+                <div class="parking-status">
+                    <span class="status-label">Ocupación Actual:</span>
+                    <span class="status-value">{{ parking.occupied }} / {{ parking.total }} espacios</span>
+                </div>
+                <div class="parking-live-status">
+                    <span class="status-indicator {{ parking.status_class }}"></span>
+                    <span class="status-text {{ parking.status_class }}">{{ parking.status_text }}</span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="no-data-message">No hay parqueaderos registrados en el sistema.</p>
+    {% endif %}
+
+    <script>
+        // Refresh the index page data periodically to update statuses
+        // This is a simple full page reload. For a smoother UX,
+        // you'd fetch data via API and update elements without reloading.
+        // For now, let's keep it simple.
+        setInterval(() => {
+            location.reload();
+        }, {{ POLL_INTERVAL_SECONDS * 1000 * 5 }}); // Refresh every 50 seconds
+    </script>
+{% endblock %}

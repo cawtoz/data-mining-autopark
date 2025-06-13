@@ -1,0 +1,176 @@
+{% extends "layout.html" %}
+
+{% block title %}Dashboard - {{ parking_name }}{% endblock %}
+
+{% block content %}
+    <div class="dashboard-container">
+        <div class="page-header">
+            <h1>Dashboard - {{ parking_name }}</h1>
+            <p class="parking-address">{{ parking_address }}</p> {# Add address display #}
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <h3>Espacios Ocupados Actualmente</h3>
+                <p id="current-occupied" class="kpi-value">Cargando...</p>
+                <p>de <span id="total-spaces">Cargando...</span> espacios</p>
+                <span id="current-occupancy-percentage" class="kpi-percentage"></span>
+            </div>
+            <div class="kpi-card">
+                <h3>Ocupación Predicha (en {{ PREDICT_AHEAD_HOURS }} hora{% if PREDICT_AHEAD_HOURS != 1 %}s{% endif %})</h3>
+                <p id="predicted-occupation" class="kpi-value">Cargando...</p>
+                <span id="predicted-occupancy-percentage" class="kpi-percentage"></span>
+            </div>
+        </div>
+
+        <div class="alerts-section card">
+            <h3>Alertas Recientes</h3>
+            <ul id="alerts-list" class="alert-list">
+                <li class="alert-info">Cargando alertas...</li>
+            </ul>
+        </div>
+
+        <div class="chart-section card">
+            <h3>Ocupación Histórica (Últimas 24h)</h3>
+            <canvas id="occupationChart"></canvas>
+            <p class="chart-info">Datos actualizados cada pocos minutos.</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const PARKING_ID = {{ parking_id }};
+        // POLL_INTERVAL_SECONDS is passed from Flask context_processor, converted to ms
+        const POLL_INTERVAL = {{ POLL_INTERVAL_SECONDS }}; 
+
+        let occupationChart; // Chart.js instance for historical occupation
+
+        /**
+         * Fetches and updates the real-time parking data (current occupation, prediction, alerts).
+         */
+        async function fetchParkingData() {
+            try {
+                const response = await fetch(`/api/data/${PARKING_ID}`);
+                const data = await response.json();
+
+                document.getElementById('current-occupied').innerText = data.current_occupied;
+                document.getElementById('total-spaces').innerText = data.total_spaces;
+                
+                let currentOccupancyPercentage = 0;
+                if (data.total_spaces > 0) {
+                    currentOccupancyPercentage = (data.current_occupied / data.total_spaces) * 100;
+                }
+                document.getElementById('current-occupancy-percentage').innerText = `(${currentOccupancyPercentage.toFixed(0)}%)`;
+
+
+                const predictedAbsolute = Math.round(data.predicted_fraction * data.total_spaces);
+                const predictedPercentage = (data.predicted_fraction * 100).toFixed(0);
+                document.getElementById('predicted-occupation').innerText = `${predictedAbsolute} espacios`;
+                document.getElementById('predicted-occupancy-percentage').innerText = `(${predictedPercentage}%)`;
+
+                const alertsList = document.getElementById('alerts-list');
+                alertsList.innerHTML = ''; // Clear previous alerts
+
+                if (data.alerts && data.alerts.length > 0) {
+                    data.alerts.forEach(alert => {
+                        const li = document.createElement('li');
+                        li.textContent = `${data.timestamp}: ${alert.message}`;
+                        li.classList.add(`alert-${alert.type}`); // Add class for styling
+                        alertsList.appendChild(li);
+                    });
+                } else {
+                    const li = document.createElement('li');
+                    li.textContent = `${data.timestamp}: No hay alertas activas.`;
+                    li.classList.add('alert-info');
+                    alertsList.appendChild(li);
+                }
+            } catch (error) {
+                console.error('Error fetching parking data:', error);
+                document.getElementById('current-occupied').innerText = "Error";
+                document.getElementById('total-spaces').innerText = "Error";
+                document.getElementById('predicted-occupation').innerText = "Error";
+                document.getElementById('current-occupancy-percentage').innerText = "";
+                document.getElementById('predicted-occupancy-percentage').innerText = "";
+                const alertsList = document.getElementById('alerts-list');
+                alertsList.innerHTML = '<li class="alert-error">Error al cargar los datos en tiempo real.</li>';
+            }
+        }
+
+        /**
+         * Fetches and updates the historical occupation chart data.
+         */
+        async function fetchHistoricalOccupation() {
+            try {
+                const response = await fetch(`/api/historical_occupation/${PARKING_ID}`);
+                const data = await response.json();
+
+                if (occupationChart) {
+                    occupationChart.destroy(); // Destroy existing chart before creating a new one
+                }
+
+                const ctx = document.getElementById('occupationChart').getContext('2d');
+                occupationChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: data.timestamps, // X-axis labels (e.g., hours)
+                        datasets: [{
+                            label: 'Espacios Ocupados',
+                            data: data.occupations, // Y-axis data (number of spaces)
+                            borderColor: 'rgb(75, 192, 192)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            tension: 0.1,
+                            fill: true // Fill area under the line
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Número de Espacios'
+                                },
+                                ticks: {
+                                    stepSize: 1 // Ensure integer ticks for space count
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Hora del Día'
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.dataset.label}: ${context.raw} espacios`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching historical occupation data:', error);
+            }
+        }
+
+        // Initial fetch and then set intervals for periodic updates
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchParkingData();
+            fetchHistoricalOccupation();
+            setInterval(fetchParkingData, POLL_INTERVAL); // Update real-time data every POLL_INTERVAL_SECONDS
+            // Update historical chart less frequently (e.g., every minute)
+            setInterval(fetchHistoricalOccupation, POLL_INTERVAL * 6); 
+        });
+
+    </script>
+{% endblock %}

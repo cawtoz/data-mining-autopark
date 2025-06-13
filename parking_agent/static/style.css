@@ -1,0 +1,370 @@
+/* General Body Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    background-color: #f4f7f6;
+    color: #333;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #2c3e50; /* Darker blue/grey */
+    color: #ecf0f1; /* Light grey */
+    padding: 15px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar .logo {
+    font-size: 1.8em;
+    font-weight: 700;
+    color: #ecf0f1;
+    text-decoration: none;
+    letter-spacing: 1px;
+}
+
+.navbar .nav-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.navbar .nav-links li {
+    margin-left: 25px;
+}
+
+.navbar .nav-links a {
+    color: #ecf0f1;
+    text-decoration: none;
+    font-weight: 400;
+    transition: color 0.3s ease;
+}
+
+.navbar .nav-links a:hover {
+    color: #3498db; /* A lighter blue */
+}
+
+/* Main Content Area */
+main {
+    flex: 1; /* Allows main content to grow and push footer down */
+    padding-top: 20px;
+    padding-bottom: 40px;
+}
+
+/* Page Header */
+.page-header {
+    background-color: #ffffff;
+    padding: 30px;
+    margin-bottom: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    text-align: center;
+}
+
+.page-header h1 {
+    color: #2c3e50;
+    margin-top: 0;
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.page-header p {
+    color: #7f8c8d; /* Muted grey */
+    font-size: 1.1em;
+}
+
+/* Cards (for dashboard KPIs, alerts, charts) */
+.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+/* KPI Grid for Dashboard */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-bottom: 25px;
+}
+
+.kpi-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    padding: 25px;
+    text-align: center;
+}
+
+.kpi-card h3 {
+    color: #34495e; /* Dark blue-grey */
+    margin-top: 0;
+    font-size: 1.3em;
+    margin-bottom: 15px;
+}
+
+.kpi-value {
+    font-size: 3.5em;
+    font-weight: 700;
+    color: #2ecc71; /* Green for positive metrics */
+    margin-bottom: 5px;
+}
+
+.kpi-card p {
+    color: #7f8c8d;
+    font-size: 1.1em;
+    margin-bottom: 0;
+}
+
+.kpi-percentage {
+    font-size: 1.2em;
+    color: #555;
+    margin-top: 5px;
+    display: block;
+}
+
+/* Alerts Section */
+.alerts-section {
+    padding: 25px;
+}
+
+.alerts-section h3 {
+    margin-top: 0;
+    color: #34495e;
+    margin-bottom: 15px;
+}
+
+.alert-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.alert-list li {
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    font-size: 0.95em;
+    display: flex;
+    align-items: center;
+    word-break: break-word; /* Ensure long messages wrap */
+}
+
+.alert-info {
+    background-color: #eaf6fc;
+    color: #3498db;
+    border-left: 5px solid #3498db;
+}
+
+.alert-warning {
+    background-color: #fff9e6;
+    color: #f39c12;
+    border-left: 5px solid #f39c12;
+}
+
+.alert-critical {
+    background-color: #fee;
+    color: #e74c3c;
+    border-left: 5px solid #e74c3c;
+    font-weight: bold;
+}
+
+.alert-error {
+    background-color: #fcebeb;
+    color: #c0392b;
+    border-left: 5px solid #c0392b;
+    font-weight: bold;
+}
+
+
+/* Chart Section */
+.chart-section {
+    padding: 25px;
+}
+
+.chart-section h3 {
+    margin-top: 0;
+    color: #34495e;
+    margin-bottom: 15px;
+}
+
+.chart-section canvas {
+    max-height: 400px; /* Control chart height */
+    width: 100% !important; /* Override Chart.js inline style */
+    height: auto !important; /* Override Chart.js inline style */
+}
+
+.chart-info {
+    font-size: 0.85em;
+    color: #999;
+    text-align: center;
+    margin-top: 15px;
+}
+
+/* Parking List for Index Page */
+.parking-list-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+}
+
+.parking-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    padding: 25px;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Pushes footer to bottom */
+}
+
+.parking-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+.parking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+}
+
+.parking-card h3 {
+    color: #2c3e50;
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.parking-id {
+    font-size: 0.9em;
+    color: #7f8c8d;
+    background-color: #ecf0f1;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-left: 10px;
+}
+
+.parking-address {
+    color: #555;
+    font-size: 0.95em;
+    margin-bottom: 15px;
+}
+
+.parking-status {
+    margin-top: 15px;
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+}
+
+.status-label {
+    font-weight: bold;
+    color: #34495e;
+}
+
+.status-value {
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+.parking-live-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* Status Colors */
+.status-ok .status-indicator, .status-ok.status-text {
+    background-color: #2ecc71; /* Green */
+    color: #2ecc71;
+}
+
+.status-warning .status-indicator, .status-warning.status-text {
+    background-color: #f39c12; /* Orange */
+    color: #f39c12;
+}
+
+.status-critical .status-indicator, .status-critical.status-text {
+    background-color: #e74c3c; /* Red */
+    color: #e74c3c;
+}
+
+.status-info .status-indicator, .status-info.status-text,
+.status-loading .status-indicator, .status-loading.status-text {
+    background-color: #3498db; /* Blue */
+    color: #3498db;
+}
+
+.no-data-message {
+    text-align: center;
+    font-size: 1.2em;
+    color: #7f8c8d;
+    margin-top: 50px;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+
+/* Footer */
+.footer {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 40px;
+    font-size: 0.9em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .navbar .container {
+        flex-direction: column;
+    }
+
+    .navbar .nav-links {
+        margin-top: 15px;
+    }
+
+    .navbar .nav-links li {
+        margin: 0 10px;
+    }
+
+    .page-header h1 {
+        font-size: 2em;
+    }
+
+    .kpi-grid {
+        grid-template-columns: 1fr; /* Stack KPIs on small screens */
+    }
+}
